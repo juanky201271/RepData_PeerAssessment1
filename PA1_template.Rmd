@@ -4,8 +4,15 @@ output:
   html_document:
     keep_md: true
 ---
-```{r globalOptions, echo = FALSE, results = "hide"}
-knitr::opts_chunk$set(echo = TRUE)
+
+```{r globalOptions, echo = FALSE, results = "hide", message = FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.path="figure/")
+```
+
+```{r libraries, message = FALSE}
+library(lattice)
+library(plyr)
+library(dplyr)
 ```
 
 ## Loading and preprocessing the data
@@ -13,9 +20,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ### 1. Load the data
 
 ```{r loadData, results='hide'}
-library(lattice)
-library(plyr)
-library(dplyr)
 Datos <- read.csv("./activity/activity.csv")
 ```
 

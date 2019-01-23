@@ -6,9 +6,6 @@ output:
 ---
 
 
-## Loading and preprocessing the data
-### Show any code that is needed to
-### 1. Load the data
 
 
 ```r
@@ -17,29 +14,10 @@ library(plyr)
 library(dplyr)
 ```
 
-```
-## 
-## Attaching package: 'dplyr'
-```
+## Loading and preprocessing the data
+### Show any code that is needed to
+### 1. Load the data
 
-```
-## The following objects are masked from 'package:plyr':
-## 
-##     arrange, count, desc, failwith, id, mutate, rename, summarise,
-##     summarize
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
 
 ```r
 Datos <- read.csv("./activity/activity.csv")
@@ -63,7 +41,7 @@ steps.date.sin.na <- Datos %>% group_by(date) %>% summarize_at(c("steps"), sum, 
 hist(steps.date.sin.na$T.sum, main = "Total number of steps taken each day", xlab = "Steps")
 ```
 
-![](PA1_template_files/figure-html/histWna-1.png)<!-- -->
+![](figure/histWna-1.png)<!-- -->
 
 ### 2. Calculate and report the mean and median total number of steps taken per day
 
@@ -89,7 +67,7 @@ DT.mean <- Datos.sin.na %>% group_by(interval) %>% summarize_at(c("steps"), mean
 plot(DT.mean$interval, DT.mean$Mean.steps, type = "l", main = "The mean of steps (all days) taken each 5-minute interval", xlab = "5-minute interval", ylab = "Mean steps (all days)")
 ```
 
-![](PA1_template_files/figure-html/plotTS-1.png)<!-- -->
+![](figure/plotTS-1.png)<!-- -->
 
 ### 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
@@ -137,7 +115,7 @@ steps.date.imp.na <- Datos.imp.i %>% group_by(date) %>% summarize_at(c("steps"),
 hist(steps.date.imp.na$T.sum, main = "Total number of steps taken each day - impute NA", xlab = "Steps")
 ```
 
-![](PA1_template_files/figure-html/histImpute-1.png)<!-- -->
+![](figure/histImpute-1.png)<!-- -->
 
 
 ```r
@@ -178,4 +156,4 @@ DTimp.mean <- Datos.imp.i %>% group_by(interval, wf) %>% summarize_at(c("steps")
 xyplot(DTimp.mean$Mean.steps ~ DTimp.mean$interval | DTimp.mean$wf, type = "l", layout = c(1,2),  main = "The mean of steps (all days) taken each 5-minute interval", xlab = "5-minute interval", ylab = "Mean steps (all days)")
 ```
 
-![](PA1_template_files/figure-html/xyplot-1.png)<!-- -->
+![](figure/xyplot-1.png)<!-- -->
