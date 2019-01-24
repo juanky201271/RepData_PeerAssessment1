@@ -28,7 +28,6 @@ Datos <- read.csv("./activity/activity.csv")
 
 ```r
 Datos$date <- as.Date(Datos$date, "%Y-%m-%d")
-Datos.sin.na <- Datos[!is.na(Datos$steps), ]
 ```
 
 ## What is mean total number of steps taken per day?
@@ -38,6 +37,23 @@ Datos.sin.na <- Datos[!is.na(Datos$steps), ]
 
 ```r
 steps.date.sin.na <- Datos %>% group_by(date) %>% summarize_at(c("steps"), sum, na.rm = TRUE) %>% rename(T.sum = steps)
+head(steps.date.sin.na)
+```
+
+```
+## # A tibble: 6 x 2
+##   date       T.sum
+##   <date>     <int>
+## 1 2012-10-01     0
+## 2 2012-10-02   126
+## 3 2012-10-03 11352
+## 4 2012-10-04 12116
+## 5 2012-10-05 13294
+## 6 2012-10-06 15420
+```
+
+
+```r
 hist(steps.date.sin.na$T.sum, main = "Total number of steps taken each day", xlab = "Steps")
 ```
 
@@ -47,15 +63,19 @@ hist(steps.date.sin.na$T.sum, main = "Total number of steps taken each day", xla
 
 
 ```r
-T.mean <- steps.date.sin.na %>% summarize_at(c("T.sum"), mean) %>% rename(T.mean = T.sum)
-T.median <- steps.date.sin.na %>% summarize_at(c("T.sum"), median) %>% rename(T.median = T.sum)
-T.mean.median <- merge(T.mean, T.median)
-T.mean.median
+mean(steps.date.sin.na$T.sum)
 ```
 
 ```
-##    T.mean T.median
-## 1 9354.23    10395
+## [1] 9354.23
+```
+
+```r
+median(steps.date.sin.na$T.sum)
+```
+
+```
+## [1] 10395
 ```
 
 ## What is the average daily activity pattern?
@@ -63,7 +83,7 @@ T.mean.median
 
 
 ```r
-DT.mean <- Datos.sin.na %>% group_by(interval) %>% summarize_at(c("steps"), mean) %>% rename(Mean.steps = steps)
+DT.mean <- Datos %>% group_by(interval) %>% summarize_at(c("steps"), mean, na.rm = TRUE) %>% rename(Mean.steps = steps)
 plot(DT.mean$interval, DT.mean$Mean.steps, type = "l", main = "The mean of steps (all days) taken each 5-minute interval", xlab = "5-minute interval", ylab = "Mean steps (all days)")
 ```
 
@@ -107,34 +127,49 @@ for(i in 1:length(Datos.imp.i$steps)) {
 }
 ```
 
-### 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day.
+### 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
 
 ```r
 steps.date.imp.na <- Datos.imp.i %>% group_by(date) %>% summarize_at(c("steps"), sum) %>% rename(T.sum = steps)
+head(steps.date.imp.na)
+```
+
+```
+## # A tibble: 6 x 2
+##   date        T.sum
+##   <date>      <dbl>
+## 1 2012-10-01 10766.
+## 2 2012-10-02   126 
+## 3 2012-10-03 11352 
+## 4 2012-10-04 12116 
+## 5 2012-10-05 13294 
+## 6 2012-10-06 15420
+```
+
+
+```r
 hist(steps.date.imp.na$T.sum, main = "Total number of steps taken each day - impute NA", xlab = "Steps")
 ```
 
 ![](figure/histImpute-1.png)<!-- -->
-
+ 
 
 ```r
-T.mean.imp.i <- steps.date.imp.na %>% summarize_at(c("T.sum"), mean) %>% rename(T.mean = T.sum)
-T.median.imp.i <- steps.date.imp.na %>% summarize_at(c("T.sum"), median) %>% rename(T.median = T.sum)
-T.mean.median.imp.i <- merge(T.mean.imp.i, T.median.imp.i)
-T.mean.median.imp.i
+mean(steps.date.imp.na$T.sum)
 ```
 
 ```
-##     T.mean T.median
-## 1 10766.19 10766.19
+## [1] 10766.19
 ```
 
-### Do these values differ from the estimates from the first part of the assignment? 
-### **Of course yes, A constant value appears in the days that only have NA's**
+```r
+median(steps.date.imp.na$T.sum)
+```
 
-### What is the impact of imputing missing data on the estimates of the total daily number of steps?
-### **This is my opinion: I can not use the variable 'date', because all the values of these days are 'NA', so I can not impute any value. Using the variable 'interval' is possible to impute values with the mean per interval. With this, the mean and median of these days are totally distorted. Maybe the best option is to impute all the NA with zeros, but of course, I'm not sure, I'm learning...**
+```
+## [1] 10766.19
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
 ### For this part the weekdays() function may be of some help here. Use the dataset with the filled-in missing values for this part
