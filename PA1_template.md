@@ -30,7 +30,7 @@ Datos$date <- as.Date(Datos$date, "%Y-%m-%d")
 ```
 
 ## What is mean total number of steps taken per day?
-### **Making the sum of steps for each day, we obtain a vector of total values for steps on this vector we calculate the mean and the median.**
+### **Making the sum of steps for each day, we obtain a vector of total values for steps, on this vector we calculate the mean and the median.**
 
 ### 1. Make a histogram of the total number of steps taken each day
 
