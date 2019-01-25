@@ -15,12 +15,11 @@ library(dplyr)
 ```
 
 ## Loading and preprocessing the data
-### Show any code that is needed to
 ### 1. Load the data
 
 
 ```r
-Datos <- read.csv("./activity/activity.csv")
+Datos <- read.csv(unz("activity.zip","activity.csv"))
 ```
 
 ### 2. Process/transform the data (if necessary) into a format suitable for your analysis
@@ -31,12 +30,13 @@ Datos$date <- as.Date(Datos$date, "%Y-%m-%d")
 ```
 
 ## What is mean total number of steps taken per day?
-### For this part of the assignment, you can ignore the missing values in the dataset
+### **Making the sum of steps for each day, we obtain a vector of total values for steps on this vector we calculate the mean and the median.**
+
 ### 1. Make a histogram of the total number of steps taken each day
 
 
 ```r
-steps.date.sin.na <- Datos %>% group_by(date) %>% summarize_at(c("steps"), sum, na.rm = TRUE) %>% rename(T.sum = steps)
+steps.date.sin.na <- Datos %>% filter(!is.na(steps)) %>% group_by(date) %>% summarize_at(c("steps"), sum) %>% rename(T.sum = steps)
 head(steps.date.sin.na)
 ```
 
@@ -44,12 +44,12 @@ head(steps.date.sin.na)
 ## # A tibble: 6 x 2
 ##   date       T.sum
 ##   <date>     <int>
-## 1 2012-10-01     0
-## 2 2012-10-02   126
-## 3 2012-10-03 11352
-## 4 2012-10-04 12116
-## 5 2012-10-05 13294
-## 6 2012-10-06 15420
+## 1 2012-10-02   126
+## 2 2012-10-03 11352
+## 3 2012-10-04 12116
+## 4 2012-10-05 13294
+## 5 2012-10-06 15420
+## 6 2012-10-07 11015
 ```
 
 
@@ -67,7 +67,7 @@ mean(steps.date.sin.na$T.sum)
 ```
 
 ```
-## [1] 9354.23
+## [1] 10766.19
 ```
 
 ```r
@@ -75,15 +75,17 @@ median(steps.date.sin.na$T.sum)
 ```
 
 ```
-## [1] 10395
+## [1] 10765
 ```
 
 ## What is the average daily activity pattern?
+### **Throughout each day there is a tendency to do more steps (more exercise) that is located in the interval 835, where the average of every day exceeds the 200 steps.**
+
 ### 1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
 
 ```r
-DT.mean <- Datos %>% group_by(interval) %>% summarize_at(c("steps"), mean, na.rm = TRUE) %>% rename(Mean.steps = steps)
+DT.mean <- Datos %>% filter(!is.na(steps)) %>% group_by(interval) %>% summarize_at(c("steps"), mean) %>% rename(Mean.steps = steps)
 plot(DT.mean$interval, DT.mean$Mean.steps, type = "l", main = "The mean of steps (all days) taken each 5-minute interval", xlab = "5-minute interval", ylab = "Mean steps (all days)")
 ```
 
@@ -101,7 +103,7 @@ DT.mean$interval[DT.mean$Mean.steps == max(DT.mean$Mean.steps)]
 ```
 
 ## Imputing missing values
-### Note that there are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data
+
 ### 1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
 
@@ -127,7 +129,7 @@ for(i in 1:length(Datos.imp.i$steps)) {
 }
 ```
 
-### 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
+### 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day.
 
 
 ```r
@@ -171,8 +173,15 @@ median(steps.date.imp.na$T.sum)
 ## [1] 10766.19
 ```
 
+### Do these values differ from the estimates from the first part of the assignment? 
+### **There is no difference between these values and the values of the principle.**
+
+### What is the impact of imputing missing data on the estimates of the total daily number of steps?
+### **The imputed values increase the central value (mean, median), with which there is no real impact.**
+
 ## Are there differences in activity patterns between weekdays and weekends?
-### For this part the weekdays() function may be of some help here. Use the dataset with the filled-in missing values for this part
+### **Yes, there are. There is a certain tendency to make more steps (more exercise) the weekdays at a certain time of day, that the days of the weekend. But at the weekend the trend is more constant throughout the day, in other words, they are made more steps (more exercise) in more intervals of the day**
+
 ### 1. Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 
 
